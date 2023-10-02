@@ -35,6 +35,7 @@ foreach (var word in words)
                 resetOnNextIteration = true;
             }
 
+            localMaxAmountOfConsonants = 0;
             continue;
         }
 
@@ -47,6 +48,9 @@ foreach (var word in words)
         localMaxAmountOfConsonants++;
     }
 
+    if (localMaxAmountOfConsonants >= amountOfConsonantsInCurrentWord)
+        amountOfConsonantsInCurrentWord = localMaxAmountOfConsonants;
+    
     if (biggestAmountOfConsonantsInTheLeftSide == amountOfConsonantsInCurrentWord)
     {
         wordsWithMostConsonants.Add(word);

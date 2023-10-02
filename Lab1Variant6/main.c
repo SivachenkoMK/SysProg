@@ -45,6 +45,7 @@ int main() {
                     amountOfConsonantsInCurrentWord = localMaxAmountOfConsonants;
                     resetOnNextIteration = 1;
                 }
+                localMaxAmountOfConsonants = 0;
                 continue;
             }
 
@@ -54,6 +55,11 @@ int main() {
             }
 
             localMaxAmountOfConsonants++;
+        }
+        
+        if (localMaxAmountOfConsonants >= amountOfConsonantsInCurrentWord)
+        {
+            amountOfConsonantsInCurrentWord = localMaxAmountOfConsonants;
         }
 
         if (biggestAmountOfConsonantsInTheLeftSide == amountOfConsonantsInCurrentWord) {
@@ -71,7 +77,7 @@ int main() {
 
         word = strtok(NULL, separators);
     }
-
+    
     for (int i = 0; i < wordCount; i++) {
         printf("%s\n", wordsWithMostConsonants[i]);
         free(wordsWithMostConsonants[i]);
