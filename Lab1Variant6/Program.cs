@@ -1,70 +1,39 @@
-﻿// Basis alphabet definition
-char[] consonants = "BCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz".ToCharArray();
-char[] separators = "!@#$%^&*()_+-=`~?.,';][/\\ \r\n\t\f\a\b".ToCharArray();
+﻿using Lab1Variant6;
 
-string input;
+var alphabetService = new AlphabetService();
+var consonants = alphabetService.GetConsonants();
+var separators = alphabetService.GetSeparators();
 
-try
-{
-    input = File.ReadAllText("input.txt");
-}
-catch (Exception)
-{
-    Console.WriteLine("Error during file read occured.");
+var fileReader = new InputReader();
+var inputResult = fileReader.TryGetInput(Consts.InputFileName);
+if (inputResult.IsFailed)
     return -1;
-}
 
-int biggestAmountOfConsonantsInTheLeftSide = 0;
+var input = inputResult.Value;
+var words = fileReader.GetWords(input, separators);
 
-List<string> wordsWithMostConsonants = new List<string>();
-var words = input.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+var result = new Result();
 
 foreach (var word in words)
 {
-    int localMaxAmountOfConsonants = 0;
-    int amountOfConsonantsInCurrentWord = 0;
-    bool resetOnNextIteration = false;
-
-    foreach (var character in word)
+    var wordInfo = new Word(word);
+    foreach (var character in wordInfo.Value)
     {
         if (!consonants.Contains(character))
         {
-            if (amountOfConsonantsInCurrentWord < localMaxAmountOfConsonants)
-            {
-                amountOfConsonantsInCurrentWord = localMaxAmountOfConsonants;
-                resetOnNextIteration = true;
-            }
-
-            localMaxAmountOfConsonants = 0;
+            wordInfo.CloseWord();
+            wordInfo.ResetLocalMaxAmountOfConsonants();
             continue;
         }
 
-        if (resetOnNextIteration)
-        {
-            localMaxAmountOfConsonants = 0;
-            resetOnNextIteration = false;
-        }
-
-        localMaxAmountOfConsonants++;
+        wordInfo.ResetWordIfNew();
+        wordInfo.RegisterConsonant();
     }
 
-    if (localMaxAmountOfConsonants >= amountOfConsonantsInCurrentWord)
-        amountOfConsonantsInCurrentWord = localMaxAmountOfConsonants;
-    
-    if (biggestAmountOfConsonantsInTheLeftSide == amountOfConsonantsInCurrentWord)
-    {
-        wordsWithMostConsonants.Add(word);
-    }
-    else if (biggestAmountOfConsonantsInTheLeftSide < amountOfConsonantsInCurrentWord)
-    {
-        biggestAmountOfConsonantsInTheLeftSide = amountOfConsonantsInCurrentWord;
-        wordsWithMostConsonants.Clear();
-        wordsWithMostConsonants.Add(word);
-    }
+    wordInfo.EqualizeMaxAmountIfCurrentIsLower();
+    result.UpdateResultWithNewWord(wordInfo);
 }
 
-Console.WriteLine(string.Join('\n', wordsWithMostConsonants));
+Console.WriteLine(string.Join('\n', result.WordsWithMostConsonants));
 
 return 0;
-
-
