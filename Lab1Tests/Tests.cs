@@ -2,8 +2,13 @@ using Lab1Variant6;
 
 namespace Lab1Tests;
 
+[Parallelizable]
 public class Tests
 {
+    private const string Word = nameof(Word);
+    private const string InputReader = nameof(InputReader);
+    private const string AlphabetService = nameof(AlphabetService);
+    
     private AlphabetService _alphabetService = default!;
     private InputReader _inputReader = default!;
     
@@ -20,6 +25,7 @@ public class Tests
     }
     
     [Test]
+    [Category(InputReader)]
     public void InputReaderTestOnFail()
     {
         // Arrange
@@ -31,6 +37,7 @@ public class Tests
     }
 
     [Test]
+    [Category(InputReader)]
     public void InputReaderTestOnEmpty()
     {
         // Arrange
@@ -46,6 +53,7 @@ public class Tests
     }
 
     [Test]
+    [Category(InputReader)]
     public void InputReaderTestOnValid()
     {
         // Arrange
@@ -62,6 +70,7 @@ public class Tests
     }
     
     
+    [Category(InputReader)]
     [TestCase(null, ExpectedResult = new string[0])]
     [TestCase("", ExpectedResult = new string[0])]
     [TestCase("This is a simple test file", ExpectedResult = new[] { "This", "is", "a", "simple", "test", "file" })]
@@ -79,6 +88,7 @@ public class Tests
     }
 
     [Test]
+    [Category(InputReader)]
     public void InputReaderWordsTestWithCollectionAssertions()
     {
         // Arrange
@@ -92,6 +102,7 @@ public class Tests
     }
     
     [Test]
+    [Category(InputReader)]
     public void InputReaderWordsTest()
     {
         // Arrange
@@ -105,6 +116,7 @@ public class Tests
     }
 
     [Test]
+    [Category(AlphabetService)]
     public void AlphabetServiceTest()
     {
         // Arrange
@@ -118,6 +130,7 @@ public class Tests
         Assert.That(intersection, Is.EqualTo(Array.Empty<char>()));
     }
 
+    [Category(Word)]
     [TestCase(null, ExpectedResult = "")]
     [TestCase("", ExpectedResult = "")]
     [TestCase("     ", ExpectedResult = "")]
@@ -130,6 +143,7 @@ public class Tests
         return word.Value;
     }
 
+    [Category(Word)]
     [TestCase("Chloe", 3, 5, 5, true)]
     [TestCase("Zzzzz", 5, 3, 5, false)]
     [TestCase("Spray", 3, 3, 3, false)]
@@ -154,6 +168,7 @@ public class Tests
     }
 
     [Test]
+    [Category(Word)]
     public void ResetLocalMaxTest()
     {
         // Arrange
@@ -171,6 +186,7 @@ public class Tests
     }
 
     [Test]
+    [Category(Word)]
     public void ResetWordIfNewTest()
     {
         // Arrange
@@ -193,6 +209,7 @@ public class Tests
     }
 
     [Test]
+    [Category(Word)]
     public void RegisterConsonantTest()
     {
         // Arrange
@@ -210,6 +227,7 @@ public class Tests
         Assert.That(word.LocalMaxAmountOfConsonants, Is.EqualTo(2));
     }
 
+    [Category(Word)]
     [TestCase(1, 1, 1)]
     [TestCase(1, 2, 2)]
     [TestCase(2, 1, 2)]
@@ -227,5 +245,23 @@ public class Tests
         
         // Assert
         Assert.That(word.AmountOfConsonantsInCurrentWord, Is.EqualTo(expectedAmount));
+    }
+
+    [TestCase(new string[0], "Solo")]
+    [TestCase(new[] { "Hello" }, "world")]
+    public void UpdateResultsWithNewWordTest(string[] startWords, string addedWord)
+    {
+        // Arrange
+        var result = new Result
+        {
+            WordsWithMostConsonants = startWords.ToList()
+        };
+        var word = new Word(addedWord);
+        
+        // Act
+        result.UpdateResultWithNewWord(word);
+        
+        // Assert
+        CollectionAssert.AreEqual(result.WordsWithMostConsonants, startWords.Append(addedWord).ToList());
     }
 }
