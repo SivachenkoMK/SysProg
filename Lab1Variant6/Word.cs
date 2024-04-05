@@ -2,13 +2,13 @@
 
 public class Word
 {
-    public int LocalMaxAmountOfConsonants = 0;
+    public int LocalMaxAmountOfConsonants;
     
-    public int AmountOfConsonantsInCurrentWord = 0;
+    public int AmountOfConsonantsInCurrentWord;
     
-    public bool ResetOnNextIteration = false;
+    public bool ResetOnNextIteration;
     
-    public string Value;
+    public readonly string Value;
 
     public Word(string word)
     {
