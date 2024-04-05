@@ -252,16 +252,18 @@ public class Tests
     public void UpdateResultsWithNewWordTest(string[] startWords, string addedWord)
     {
         // Arrange
-        var result = new Result
+        var result = new Result();
+        foreach (var word in startWords)
         {
-            WordsWithMostConsonants = startWords.ToList()
-        };
-        var word = new Word(addedWord);
+            result.UpdateResultWithNewWord(new Word(word));
+        }
+        
+        var lastWord = new Word(addedWord);
         
         // Act
-        result.UpdateResultWithNewWord(word);
+        result.UpdateResultWithNewWord(lastWord);
         
         // Assert
-        CollectionAssert.AreEqual(result.WordsWithMostConsonants, startWords.Append(addedWord).ToList());
+        Assert.That(string.Join('\n', startWords.Append(addedWord).ToList()), Is.EqualTo(result.Display()));
     }
 }

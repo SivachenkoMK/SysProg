@@ -34,6 +34,5 @@ foreach (var word in words)
     result.UpdateResultWithNewWord(wordInfo);
 }
 
-Console.WriteLine(string.Join('\n', result.WordsWithMostConsonants));
-
+result.Display();
 return 0;

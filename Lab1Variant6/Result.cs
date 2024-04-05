@@ -2,7 +2,7 @@
 
 public class Result
 {
-    public List<string> WordsWithMostConsonants = new();
+    private readonly List<string> _wordsWithMostConsonants = new();
 
     private int _biggestAmountOfConsonantsInTheLeftSide;
 
@@ -10,14 +10,22 @@ public class Result
     {
         if (_biggestAmountOfConsonantsInTheLeftSide == wordInfo.AmountOfConsonantsInCurrentWord)
         {
-            WordsWithMostConsonants.Add(wordInfo.Value);
+            _wordsWithMostConsonants.Add(wordInfo.Value);
         }
 
         if (_biggestAmountOfConsonantsInTheLeftSide < wordInfo.AmountOfConsonantsInCurrentWord)
         {
             _biggestAmountOfConsonantsInTheLeftSide = wordInfo.AmountOfConsonantsInCurrentWord;
-            WordsWithMostConsonants.Clear();
-            WordsWithMostConsonants.Add(wordInfo.Value);
+            _wordsWithMostConsonants.Clear();
+            _wordsWithMostConsonants.Add(wordInfo.Value);
         }
+    }
+
+    public string Display()
+    {
+        var result = string.Join('\n', _wordsWithMostConsonants);
+        Console.WriteLine(result);
+
+        return result;
     }
 }
