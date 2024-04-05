@@ -1,5 +1,4 @@
 using Lab1Variant6;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Lab1Tests;
 
